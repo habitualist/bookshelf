@@ -1,0 +1,128 @@
+<%- include('partials/header', { pageTitle: book ? 'Edit Book' : 'Add Book' }) %>
+
+<div class="form-page">
+  <a href="<%= book ? '/books/' + book.id : '/' %>" class="back-link">← Back</a>
+
+  <h1 class="form-title"><%= book ? 'Edit Book' : 'Add a Book' %></h1>
+
+  <form action="<%= action %>" method="POST" class="book-form" id="bookForm">
+
+    <!-- Cover Preview -->
+    <div class="cover-preview-row">
+      <div class="cover-preview" id="coverPreview">
+        <img
+          id="coverImg"
+          src="<%= book ? book.cover_url : '/images/no-cover.svg' %>"
+          alt="Book cover preview"
+          onerror="this.src='/images/no-cover.svg'"
+        />
+      </div>
+      <button type="button" class="btn btn-ghost" id="fetchCoverBtn">🔍 Preview Cover</button>
+    </div>
+
+    <div class="form-grid">
+
+      <!-- Title -->
+      <div class="form-group span-2">
+        <label for="title">Title <span class="required">*</span></label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          required
+          placeholder="e.g. Thinking, Fast and Slow"
+          value="<%= book ? book.title : '' %>"
+        />
+      </div>
+
+      <!-- Author -->
+      <div class="form-group span-2">
+        <label for="author">Author <span class="required">*</span></label>
+        <input
+          type="text"
+          id="author"
+          name="author"
+          required
+          placeholder="e.g. Daniel Kahneman"
+          value="<%= book ? book.author : '' %>"
+        />
+      </div>
+
+      <!-- ISBN -->
+      <div class="form-group">
+        <label for="isbn">ISBN <span class="hint">(for cover lookup)</span></label>
+        <input
+          type="text"
+          id="isbn"
+          name="isbn"
+          placeholder="e.g. 9780374533557"
+          value="<%= book ? (book.isbn || '') : '' %>"
+        />
+      </div>
+
+      <!-- Rating -->
+      <div class="form-group">
+        <label for="rating">Rating <span class="required">*</span></label>
+        <select id="rating" name="rating" required>
+          <% for (let i = 10; i >= 1; i--) { %>
+            <option value="<%= i %>" <%= book && book.rating === i ? 'selected' : '' %>>
+              <%= i %>/10
+            </option>
+          <% } %>
+        </select>
+      </div>
+
+      <!-- Date Read -->
+      <div class="form-group">
+        <label for="date_read">Date Read</label>
+        <input
+          type="date"
+          id="date_read"
+          name="date_read"
+          value="<%= book && book.date_read ? new Date(book.date_read).toISOString().split('T')[0] : '' %>"
+        />
+      </div>
+
+      <!-- Refresh cover (edit only) -->
+      <% if (book) { %>
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" name="refresh_cover" id="refresh_cover" />
+            Re-fetch cover from Open Library
+          </label>
+        </div>
+      <% } %>
+
+      <!-- Summary -->
+      <div class="form-group span-2">
+        <label for="summary">Summary / Key Takeaways <span class="required">*</span></label>
+        <textarea
+          id="summary"
+          name="summary"
+          rows="6"
+          required
+          placeholder="What did you learn? What were the most valuable ideas?"
+        ><%= book ? book.summary : '' %></textarea>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-group span-2">
+        <label for="notes">Notes <span class="hint">(optional)</span></label>
+        <textarea
+          id="notes"
+          name="notes"
+          rows="4"
+          placeholder="Any extra thoughts, quotes, or related books…"
+        ><%= book ? (book.notes || '') : '' %></textarea>
+      </div>
+
+    </div>
+
+    <div class="form-footer">
+      <a href="<%= book ? '/books/' + book.id : '/' %>" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn btn-primary"><%= buttonLabel %></button>
+    </div>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

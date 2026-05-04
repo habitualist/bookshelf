@@ -1,0 +1,71 @@
+<%- include('partials/header', { pageTitle: book.title }) %>
+
+<div class="book-detail">
+
+  <!-- Back link -->
+  <a href="/" class="back-link">← Back to Library</a>
+
+  <div class="detail-layout">
+
+    <!-- Cover column -->
+    <aside class="detail-cover-col">
+      <div class="detail-cover">
+        <img
+          src="<%= book.cover_url %>"
+          alt="Cover of <%= book.title %>"
+          onerror="this.src='/images/no-cover.svg'"
+        />
+      </div>
+      <!-- Rating badge -->
+      <div class="detail-rating-badge">
+        <span class="rating-big"><%= book.rating %></span>
+        <span class="rating-denom">/10</span>
+      </div>
+      <!-- Actions -->
+      <div class="detail-actions">
+        <a href="/books/<%= book.id %>/edit" class="btn btn-secondary">Edit</a>
+        <form action="/books/<%= book.id %>/delete" method="POST" onsubmit="return confirmDelete()">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+    </aside>
+
+    <!-- Content column -->
+    <div class="detail-content">
+      <h1 class="detail-title"><%= book.title %></h1>
+      <p class="detail-author">by <strong><%= book.author %></strong></p>
+
+      <div class="detail-meta">
+        <% if (book.date_read) { %>
+          <span class="meta-chip">
+            📅 Read <%= new Date(book.date_read).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %>
+          </span>
+        <% } %>
+        <% if (book.isbn) { %>
+          <span class="meta-chip">ISBN <%= book.isbn %></span>
+        <% } %>
+      </div>
+
+      <section class="detail-section">
+        <h2>My Summary</h2>
+        <p><%= book.summary %></p>
+      </section>
+
+      <% if (book.notes) { %>
+        <section class="detail-section">
+          <h2>Notes</h2>
+          <p><%= book.notes %></p>
+        </section>
+      <% } %>
+
+      <p class="detail-timestamp">
+        Added <%= new Date(book.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %>
+        <% if (book.updated_at && book.updated_at.toString() !== book.created_at.toString()) { %>
+          · Updated <%= new Date(book.updated_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %>
+        <% } %>
+      </p>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
