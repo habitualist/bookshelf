@@ -1,0 +1,129 @@
+{
+  "info": {
+    "name": "BookShelf API",
+    "description": "All endpoints for the BookShelf book-notes app.",
+    "_postman_id": "bookshelf-collection-v1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "bookId",  "value": "1",                    "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Home — List all books (default sort)",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/?sort=date_read", "host": ["{{baseUrl}}"], "path": [""] , "query": [{"key": "sort","value": "date_read"}]},
+        "description": "Returns the index page. Sort options: date_read | rating | title"
+      }
+    },
+    {
+      "name": "List books sorted by rating",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/?sort=rating", "host": ["{{baseUrl}}"], "path": [""], "query": [{"key":"sort","value":"rating"}]},
+        "description": "Returns books ordered by rating descending."
+      }
+    },
+    {
+      "name": "List books sorted by title",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/?sort=title", "host": ["{{baseUrl}}"], "path": [""], "query": [{"key":"sort","value":"title"}]},
+        "description": "Returns books ordered alphabetically by title."
+      }
+    },
+    {
+      "name": "Add Book — Show form",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/books/new", "host": ["{{baseUrl}}"], "path": ["books","new"]},
+        "description": "Renders the add-book form."
+      }
+    },
+    {
+      "name": "Add Book — Create (POST)",
+      "request": {
+        "method": "POST",
+        "header": [{"key":"Content-Type","value":"application/x-www-form-urlencoded"}],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {"key":"title",     "value":"Deep Work"},
+            {"key":"author",    "value":"Cal Newport"},
+            {"key":"isbn",      "value":"9781455586691"},
+            {"key":"rating",    "value":"9"},
+            {"key":"date_read", "value":"2024-06-01"},
+            {"key":"summary",   "value":"Deep Work argues that the ability to focus without distraction is a superpower in the modern economy. Newport distinguishes between deep work (cognitively demanding, distraction-free) and shallow work (logistical, easily replicated). He provides frameworks — time-blocking, the 4DX method — to structure your day around deep work sessions."},
+            {"key":"notes",     "value":"Immediately started time-blocking after reading this."}
+          ]
+        },
+        "url": { "raw": "{{baseUrl}}/books", "host": ["{{baseUrl}}"], "path": ["books"]},
+        "description": "Creates a new book entry and fetches a cover from Open Library."
+      }
+    },
+    {
+      "name": "View Single Book",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/books/{{bookId}}", "host": ["{{baseUrl}}"], "path": ["books","{{bookId}}"]},
+        "description": "Returns the detail page for a single book."
+      }
+    },
+    {
+      "name": "Edit Book — Show form",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/books/{{bookId}}/edit", "host": ["{{baseUrl}}"], "path": ["books","{{bookId}}","edit"]},
+        "description": "Renders the edit form pre-filled with existing data."
+      }
+    },
+    {
+      "name": "Edit Book — Update (POST)",
+      "request": {
+        "method": "POST",
+        "header": [{"key":"Content-Type","value":"application/x-www-form-urlencoded"}],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {"key":"title",         "value":"Deep Work"},
+            {"key":"author",        "value":"Cal Newport"},
+            {"key":"isbn",          "value":"9781455586691"},
+            {"key":"rating",        "value":"10"},
+            {"key":"date_read",     "value":"2024-06-01"},
+            {"key":"summary",       "value":"Updated summary text here."},
+            {"key":"notes",         "value":"Updated notes."},
+            {"key":"refresh_cover", "value":"on"}
+          ]
+        },
+        "url": { "raw": "{{baseUrl}}/books/{{bookId}}/update", "host": ["{{baseUrl}}"], "path": ["books","{{bookId}}","update"]},
+        "description": "Updates an existing book. Set refresh_cover=on to re-fetch the cover."
+      }
+    },
+    {
+      "name": "Delete Book (POST)",
+      "request": {
+        "method": "POST",
+        "url": { "raw": "{{baseUrl}}/books/{{bookId}}/delete", "host": ["{{baseUrl}}"], "path": ["books","{{bookId}}","delete"]},
+        "description": "Permanently deletes a book entry."
+      }
+    },
+    {
+      "name": "API — Cover lookup by ISBN",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/cover/9780374533557", "host": ["{{baseUrl}}"], "path": ["api","cover","9780374533557"]},
+        "description": "Returns JSON { cover_url } for an ISBN or title query. Used by the live preview on the form."
+      }
+    },
+    {
+      "name": "API — Cover lookup by title",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/cover/Atomic%20Habits", "host": ["{{baseUrl}}"], "path": ["api","cover","Atomic%20Habits"]},
+        "description": "Returns JSON { cover_url } searched by book title."
+      }
+    }
+  ]
+}
